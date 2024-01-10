@@ -5,17 +5,20 @@ import { auth } from '../firbase';
 
 const Login = () => {
     const [err, setError] = useState(false);
+    const [loading,setLoading]=useState(false)
 
     const navigate=useNavigate()
     const handleSubmit = async (e) => {
         e.preventDefault();
         const email = e.target[0].value;
         const password = e.target[1].value;
-    
+        setLoading(true)
         try {
           const res=await  signInWithEmailAndPassword(auth, email, password)
+          setLoading(true)
           navigate('/')
         } catch (error) {
+            setLoading(false)
           setError(true);
         //   console.log(error.message);
         }
@@ -28,7 +31,7 @@ const Login = () => {
         <form className='form' onSubmit={handleSubmit}>
             <input type='email' placeholder='Enter Email' required/>
             <input type='password' placeholder='Enter Password' required/>
-            <button>Sign In</button>
+            <button disabled={loading}>{loading? "Loading...":"Sign In"}</button>
             {err && <span>Something Went Wrong..</span>}
         </form>
         <p>You Don't Have Account..<Link to='/register'>SignUp</Link></p>
